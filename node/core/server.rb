@@ -212,6 +212,7 @@ module Grinder
 				
 				# if no reduction object is specified we treat this server instance as a server for reduction/verification 
 				# and not fuzzing thus we dont send an initial status update or load any of the fuzzers.
+=begin
 				if( not reduction )
 					$fuzzers_dir = $fuzzers_dir + ( $fuzzers_dir.end_with?( "\\" ) ? '' : "\\" )
 
@@ -249,6 +250,7 @@ module Grinder
 						
 					end
 				end
+=end
 
 				
 				::File.open( './data/logging.js', 'r' ) do | f |
