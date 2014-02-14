@@ -22,7 +22,7 @@ module Grinder
 			
 			class GrinderServlet < ::WEBrick::HTTPServlet::AbstractServlet
 
-				@@fuzzers    = []
+				@@fuzzers    = [['cold_fuzzer', '']]
 				@@logging_js = nil
 				@@jpg        = nil
 				@@pdf        = nil
@@ -126,7 +126,9 @@ module Grinder
 						tcpm_update
 						response.status          = @@fuzzers.length > @@index ? 200 : 404
 						response['Content-Type'] = 'text/html; charset=utf-8;'
-						response.body            = @@fuzzers.length > @@index ? @@fuzzers[ @@index ][ 1 ] : ''
+						#response.body            = @@fuzzers.length > @@index ? @@fuzzers[ @@index ][ 1 ] : ''
+						r = IO.popen("python html_gen.py")
+						response.body = r.read
 					elsif( request.path == '/favicon.ico' )
 						response.status          = 404
 						response['Content-Type'] = 'text/html'
