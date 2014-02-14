@@ -55,6 +55,9 @@ module Grinder
 			
 			# we dont want to use grinder_logger.dll in the broker process...
 			def use_logger?( pid )
+				# add by oo
+				return false
+				# oo
 				if( ie_major_version == 8 )
 					return true
 				elsif( ie_major_version >= 9 && @attached[pid].commandline =~ /SCODEF:/i )
