@@ -138,7 +138,7 @@ module Grinder
 							::Thread.abort_on_exception = true
 							timer_thd = ::Thread.new do
 								timers = Timers.new
-								##FIXME time like 5 should be configurable
+								##FIXME time like 5 seconds should be configurable
 								five_seconds_timer = timers.every(5) { 
 									if (@@last_count == @@fuzz_count)
 										print_status("browser maybe had been block, killing")
