@@ -10,6 +10,9 @@ require 'core/configuration'
 require 'core/logging'
 require 'digest/sha2'
 
+# kill debugger by event
+require 'win32/event'
+
 class Grinder
 	
 	BROWSER_CLASS_IE = '.\browser\internetexplorer.rb'
@@ -156,6 +159,7 @@ class Grinder
 		server_reset  = 0
 		$server_pid   = nil
 		$debugger_pid = nil
+		kill_event = Win32::Event.new("colf_fuzzer_kill_debugger", false, false, false)
 		
 		while( true )
 		
@@ -177,8 +181,8 @@ class Grinder
 				# a crash and a browser memory leak gobbeling up a grinder nodes memory (or the browser being
 				# deadlocked for some reason).
 				kill_thread = ::Thread.new do
-					
-					sleep( $debugger_restart_minutes * 60 )
+					kill_event.wait( $debugger_restart_minutes * 60 )
+					#sleep( $debugger_restart_minutes * 60 )
 					
 					print_status( "Killing the debugger process #{$debugger_pid} after #{$debugger_restart_minutes} minutes." )
 

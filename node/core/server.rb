@@ -10,6 +10,10 @@ require 'base64'
 require 'core/logging'
 require 'core/webstats'
 
+# check browser block
+require 'timers'
+require 'win32/event'
+
 module Grinder
 
 	module Core
@@ -29,6 +33,9 @@ module Grinder
 				@@count      = 0
 				@@index      = 0
 				@@reductor   = nil
+				
+				@@fuzz_count = 0
+				@@last_count = -1
 				
 				@@testcases_since_update = 0
 				@@last_update            = ::Time.now
@@ -127,8 +134,45 @@ module Grinder
 						response.status          = @@fuzzers.length > @@index ? 200 : 404
 						response['Content-Type'] = 'text/html; charset=utf-8;'
 						#response.body            = @@fuzzers.length > @@index ? @@fuzzers[ @@index ][ 1 ] : ''
-						r = IO.popen("python html_gen.py")
+						if (@@fuzz_count == 0)
+							::Thread.abort_on_exception = true
+							timer_thd = ::Thread.new do
+								timers = Timers.new
+								##FIXME time like 5 should be configurable
+								five_seconds_timer = timers.every(5) { 
+									if (@@last_count == @@fuzz_count)
+										print_status("browser maybe had been block, killing")
+										a = Win32::Event.open("colf_fuzzer_kill_debugger", false)
+										a.set
+										
+=begin
+										exe_file = 'iexplore.exe'
+										Metasm::WinOS.list_processes.each do | proc |
+											mods = proc.modules
+											if( mods )
+												if( mods.first and mods.first.path.include?( exe_file ) )
+													print_error( "Found an instance of #{exe_file} [#{proc.pid}] already running, killing..." )
+													begin
+														::Process.kill( "KILL", proc.pid )
+														::Process.wait( proc.pid )
+													rescue ::Errno::ESRCH, Errno::ECHILD
+													end
+												end
+											end
+										end
+=end
+									end
+									@@last_count = @@fuzz_count
+								}
+								loop { timers.wait }
+							end
+						end
+						@@fuzz_count += 1
+						#print_status("current count #{@@fuzz_count}")
+						##FIXME
+						r = ::IO.popen("python html_gen.py")
 						response.body = r.read
+						r.close
 					elsif( request.path == '/favicon.ico' )
 						response.status          = 404
 						response['Content-Type'] = 'text/html'
