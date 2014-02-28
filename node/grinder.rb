@@ -170,7 +170,7 @@ class Grinder
 				$server_pid = ::Process.spawn( "ruby -I. .\\core\\server.rb --config=#{@config_file} --browser=#{@browser_type} #{ ( @fuzzer ? '--fuzzer='+@fuzzer : '' ) } #{ ( not @verbose ? '--quiet' : '' ) }" )
 				sleep( 2 )
 				print_status( "Started the Grinder server process #{$server_pid}" )
-				server_reset = 12
+				server_reset = 30
 			end
 			
 			$debugger_pid = ::Process.spawn( "ruby -I. #{@browser_class} --config=#{@config_file} --path=/grinder #{ ( not @verbose ? '--quiet' : '' ) }" )
