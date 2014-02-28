@@ -138,29 +138,12 @@ module Grinder
 							::Thread.abort_on_exception = true
 							timer_thd = ::Thread.new do
 								timers = Timers.new
-								##FIXME time like 5 seconds should be configurable
-								five_seconds_timer = timers.every(5) { 
+								##FIXME time like 10 seconds should be configurable
+								block_timer = timers.every(10) { 
 									if (@@last_count == @@fuzz_count)
 										print_status("browser maybe had been block, killing")
 										a = Win32::Event.open("colf_fuzzer_kill_debugger", false)
 										a.set
-										
-=begin
-										exe_file = 'iexplore.exe'
-										Metasm::WinOS.list_processes.each do | proc |
-											mods = proc.modules
-											if( mods )
-												if( mods.first and mods.first.path.include?( exe_file ) )
-													print_error( "Found an instance of #{exe_file} [#{proc.pid}] already running, killing..." )
-													begin
-														::Process.kill( "KILL", proc.pid )
-														::Process.wait( proc.pid )
-													rescue ::Errno::ESRCH, Errno::ECHILD
-													end
-												end
-											end
-										end
-=end
 									end
 									@@last_count = @@fuzz_count
 								}
@@ -173,6 +156,11 @@ module Grinder
 						r = ::IO.popen("python html_gen.py")
 						response.body = r.read
 						r.close
+						# save html
+						##FIXME omit filename "tmp.html"
+						f = File.open("tmp.html", 'w')
+						f.write(response.body)
+						f.close
 					elsif( request.path == '/favicon.ico' )
 						response.status          = 404
 						response['Content-Type'] = 'text/html'

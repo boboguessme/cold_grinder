@@ -35,7 +35,7 @@ module Grinder
 					
 					heaphook_initialize()
 					
-					@browser     = ''
+					@browser     = get_browser
 					@crashes_dir = crashes_dir
 					@reduction   = reduction
 					@attached    = ::Hash.new
@@ -557,6 +557,10 @@ module Grinder
 									print_error( "Failed to save the log file." )
 								end
 							end
+							
+							poc = File.open("tmp.html", "r")
+							log_data = poc.read
+							poc.close
 
 							e.log( crash_data, log_data )
 						end

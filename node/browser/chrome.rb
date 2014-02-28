@@ -12,6 +12,11 @@ module Grinder
 	module Browser
 	
 		class Chrome < Grinder::Core::Debugger
+		
+			def get_browser
+				# no test
+				return 'CM'
+			end
 			
 			def self.target_exe
 				return $chrome_exe

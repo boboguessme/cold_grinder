@@ -15,6 +15,10 @@ module Grinder
 			
 			@@cached_version = -1
 			
+			def get_browser
+				return "IE" + ie_major_version.to_s
+			end
+
 			def ie_major_version
 				begin
 					if( @@cached_version != -1 )

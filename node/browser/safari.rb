@@ -13,6 +13,11 @@ module Grinder
 	
 		class Safari < Grinder::Core::Debugger
 		
+			def get_browser
+				# no test
+				return 'SF'
+			end
+		
 			def self.target_exe
 				return $safari_exe
 			end

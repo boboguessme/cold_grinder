@@ -16,6 +16,12 @@ module Grinder
 		# Note: In about:config set dom.max_script_run_time to something like 600 to avoid stop script dialogs...
 		
 		class FireFox < Grinder::Core::Debugger
+		
+			def get_browser
+				# no test
+				ff_version
+				return 'FF' + @@cached_major_version.to_s + '.' + @@cached_minor_version.to_s
+			end
 			
 			def self.target_exe
 				return $firefox_exe
