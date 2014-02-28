@@ -141,7 +141,7 @@ module Grinder
 								##FIXME time like 10 seconds should be configurable
 								block_timer = timers.every(10) { 
 									if (@@last_count == @@fuzz_count)
-										print_status("browser maybe had been block, killing")
+										print_status("Browser maybe had been block at #{::Time.new.strftime( "%Y-%m-%d %H:%M:%S" )}, killing")
 										a = Win32::Event.open("colf_fuzzer_kill_debugger", false)
 										a.set
 									end
