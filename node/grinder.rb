@@ -211,7 +211,15 @@ class Grinder
 			
 			# block for the debugger to either exit due to a crash or to be killed by the above kill_thread
 			begin
-				::Process.wait( $debugger_pid )
+				while ( true )
+					if $server_pid == nil
+						::Process.kill("KILL", $debugger_pid )
+						break
+					end
+					# block not any more, instead of polling | add by oo
+					::Process.wait( $debugger_pid, ::Process::WNOHANG )
+					sleep(10)
+				end
 			rescue ::Errno::ESRCH, Errno::ECHILD, Errno::EINVAL
 			end
 			
