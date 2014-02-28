@@ -152,15 +152,15 @@ module Grinder
 						end
 						@@fuzz_count += 1
 						#print_status("current count #{@@fuzz_count}")
-						##FIXME
-						r = ::IO.popen("python html_gen.py")
-						response.body = r.read
-						r.close
+						##FIXME use IPC
+						::IO.popen("python html_gen.py") do | proc |
+							response.body = proc.read
+						end
 						# save html
 						##FIXME omit filename "tmp.html"
-						f = File.open("tmp.html", 'w')
-						f.write(response.body)
-						f.close
+						::File.open("tmp.html", 'w') do | f |
+							f.write(response.body)
+						end
 					elsif( request.path == '/favicon.ico' )
 						response.status          = 404
 						response['Content-Type'] = 'text/html'

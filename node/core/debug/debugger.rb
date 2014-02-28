@@ -558,9 +558,9 @@ module Grinder
 								end
 							end
 							
-							poc = File.open("tmp.html", "r")
-							log_data = poc.read
-							poc.close
+							::File.open("tmp.html", "r") do | poc |
+								log_data = poc.read
+							end
 
 							e.log( crash_data, log_data )
 						end
