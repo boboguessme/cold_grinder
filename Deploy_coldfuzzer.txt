@@ -1,0 +1,4 @@
+需要安装timers/win32-ipc/win32-event模块
+跑的过程中不能再启动该浏览器，不然可能会被异常关闭
+
+把cold_fuzzer的py代码复制到node下
