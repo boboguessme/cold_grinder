@@ -36,6 +36,7 @@ module Grinder
 				
 				@@fuzz_count = 0
 				@@last_count = -1
+				@@block_status = false
 				
 				@@testcases_since_update = 0
 				@@last_update            = ::Time.now
@@ -140,17 +141,21 @@ module Grinder
 								timers = Timers.new
 								##FIXME time like 10 seconds should be configurable
 								block_timer = timers.every(10) { 
-									if (@@last_count == @@fuzz_count)
+									if ( (@@last_count == @@fuzz_count) and !@@block_status)
 										print_status("Browser maybe had been block at #{::Time.new.strftime( "%Y-%m-%d %H:%M:%S" )}, killing")
-										a = Win32::Event.open("colf_fuzzer_kill_debugger", false)
+										a = Win32::Event.open("cold_fuzzer_kill_debugger", false)
 										a.set
+										a.close
+										@@block_status = true
+									elsif ( !@@block_status )
+										@@last_count = @@fuzz_count
 									end
-									@@last_count = @@fuzz_count
 								}
 								loop { timers.wait }
 							end
 						end
 						@@fuzz_count += 1
+						@@block_status = false
 						#print_status("current count #{@@fuzz_count}")
 						##FIXME use IPC
 						::IO.popen("python html_gen.py") do | proc |

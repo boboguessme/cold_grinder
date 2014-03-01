@@ -160,7 +160,7 @@ class Grinder
 		$server_pid   = nil
 		$debugger_pid = nil
 		#BUG: the event will block grinder.rb exiting by Ctrl+C
-		kill_event = Win32::Event.new("colf_fuzzer_kill_debugger", false, false, false)
+		kill_event = Win32::Event.new("cold_fuzzer_kill_debugger", false, false, false)
 		
 		while( true )
 		
