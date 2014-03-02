@@ -212,7 +212,7 @@ class Grinder
 			# block for the debugger to either exit due to a crash or to be killed by the above kill_thread
 			begin
 				while ( true )
-					if $server_pid == nil
+					if ( $server_pid == nil )
 						::Process.kill("KILL", $debugger_pid )
 						break
 					end
