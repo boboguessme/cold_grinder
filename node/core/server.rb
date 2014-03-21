@@ -151,6 +151,7 @@ module Grinder
 										@@last_count = @@fuzz_count
 									end
 								}
+								##BUG it will crash at 2 weeks, because Times lib.
 								loop { timers.wait }
 							end
 						end
